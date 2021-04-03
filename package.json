@@ -1,5 +1,5 @@
 {
-  "name": "example-apollo-client-reactive-variables",
+  "name": "example-apollo-client-local-state",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

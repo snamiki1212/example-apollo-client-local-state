@@ -6,7 +6,11 @@ import {
   useQuery,
   useMutation,
   gql,
+  makeVar,
 } from "@apollo/client";
+import {} from "./ReactiveVariables/components";
+
+const elementsVar = makeVar([] as string[]);
 
 const client = new ApolloClient({
   cache: new InMemoryCache({
@@ -14,13 +18,18 @@ const client = new ApolloClient({
       Query: {
         fields: {
           items: {
-            read(cached) {
-              return cached ?? [];
+            read() {
+              return [];
             },
           },
           todos: {
             read() {
               return JSON.parse(window.localStorage.getItem("TODOS") ?? "[]");
+            },
+          },
+          elements: {
+            read() {
+              return elementsVar();
             },
           },
         },
@@ -49,6 +58,13 @@ function App() {
         <ShowTodos />
         <ClearTodos />
       </div>
+
+      <div>
+        <h3>Reactive Variables</h3>
+        <HandleElements />
+        <ShowElements />
+        <ClearElements />
+      </div>
     </Provider>
   );
 }
@@ -70,6 +86,55 @@ const GetTodos = gql`
     todos @client
   }
 `;
+
+const GetElements = gql`
+  query GetElements {
+    elements @client
+  }
+`;
+
+const ShowElements = () => {
+  const { data, loading, error } = useQuery(GetElements);
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>error: {error.message}</div>;
+  if (!data || !data.elements) return <div>no data</div>;
+
+  const elements: Array<string> = data.elements;
+  console.log("DATA, data", data);
+
+  return (
+    <div>
+      {elements?.map((item) => (
+        <div key={item}>{item}</div>
+      ))}
+    </div>
+  );
+};
+
+const HandleElements = () => {
+  const [text, setText] = React.useState<string>("");
+  const [noop] = useMutation(Noop, {
+    update() {
+      const result = elementsVar([...elementsVar(), text]);
+      console.log("UPDATE:", result);
+    },
+  });
+
+  const handleAdd = async () => {
+    await noop();
+  };
+
+  return (
+    <div>
+      <input onChange={(e) => setText(e.target.value)} value={text} />
+      <button onClick={handleAdd}>+</button>
+    </div>
+  );
+};
+
+const ClearElements = () => {
+  return <button onClick={() => elementsVar([])}>clear</button>;
+};
 
 const HandleItems = () => {
   const [text, setText] = React.useState<string>("");
