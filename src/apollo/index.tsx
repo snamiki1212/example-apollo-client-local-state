@@ -8,8 +8,8 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           items: {
-            read() {
-              return ["ok"];
+            read(cached) {
+              return cached ?? [];
             },
           },
           todos: {
