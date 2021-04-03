@@ -1,6 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import {
   ApolloProvider,
   ApolloClient,
@@ -9,7 +7,6 @@ import {
   useMutation,
   gql,
 } from "@apollo/client";
-// import {} from '@apollo/client/link'
 
 const client = new ApolloClient({
   cache: new InMemoryCache({
