@@ -18,6 +18,11 @@ const client = new ApolloClient({
               return cached ?? [];
             },
           },
+          todos: {
+            read() {
+              return JSON.parse(window.localStorage.getItem("TODOS") ?? "[]");
+            },
+          },
         },
       },
     },
@@ -31,8 +36,17 @@ const Provider: React.FC = ({ children }) => {
 function App() {
   return (
     <Provider>
-      <Handler />
-      <Items />
+      <div>
+        <h3>InMemoryCache</h3>
+        <HandleItems />
+        <ShowItems />
+      </div>
+
+      <div>
+        <h3>LocalStorage</h3>
+        <HandleTodos />
+        <ShowTodos />
+      </div>
     </Provider>
   );
 }
@@ -49,11 +63,16 @@ const Noop = gql`
   }
 `;
 
-const Handler = () => {
+const GetTodos = gql`
+  query GetTodos {
+    todos @client
+  }
+`;
+
+const HandleItems = () => {
   const [text, setText] = React.useState<string>("");
   const [noop] = useMutation(Noop, {
     update(cache) {
-      console.log("__text", text);
       const prevData = cache.readQuery({
         query: GetItems,
       });
@@ -80,7 +99,7 @@ const Handler = () => {
   );
 };
 
-const Items = () => {
+const ShowItems = () => {
   const { data, loading, error } = useQuery(GetItems);
   if (loading) return <div>loading...</div>;
   if (error) return <div>error: {error.message}</div>;
@@ -90,8 +109,58 @@ const Items = () => {
 
   return (
     <div>
-      <h3>This is Items</h3>
       {items?.map((item) => (
+        <div key={item}>{item}</div>
+      ))}
+    </div>
+  );
+};
+
+const HandleTodos = () => {
+  const [text, setText] = React.useState<string>("");
+  const [noop] = useMutation(Noop, {
+    update(cache) {
+      const prevData = cache.readQuery({
+        query: GetTodos,
+      });
+      const prev = (prevData as any)?.todos;
+
+      const newData = [...prev, text];
+
+      const result = cache.writeQuery({
+        query: GetTodos,
+        data: { todos: newData },
+      });
+
+      window.localStorage.setItem("TODOS", JSON.stringify(newData));
+
+      console.log("UPDATE:", result);
+    },
+  });
+
+  const handleAdd = async () => {
+    await noop();
+  };
+
+  return (
+    <div>
+      <input onChange={(e) => setText(e.target.value)} value={text} />
+      <button onClick={handleAdd}>+</button>
+    </div>
+  );
+};
+
+const ShowTodos = () => {
+  const { data, loading, error } = useQuery(GetTodos);
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>error: {error.message}</div>;
+  if (!data || !data.todos) return <div>no data</div>;
+
+  const todos: Array<string> = data.todos;
+
+  return (
+    <div>
+      {todos?.map((item) => (
         <div key={item}>{item}</div>
       ))}
     </div>
