@@ -40,12 +40,14 @@ function App() {
         <h3>InMemoryCache</h3>
         <HandleItems />
         <ShowItems />
+        <ClearItems />
       </div>
 
       <div>
         <h3>LocalStorage</h3>
         <HandleTodos />
         <ShowTodos />
+        <ClearTodos />
       </div>
     </Provider>
   );
@@ -116,6 +118,16 @@ const ShowItems = () => {
   );
 };
 
+const ClearItems = () => {
+  const clear = () => {
+    client.writeQuery({
+      query: GetItems,
+      data: { items: [] },
+    });
+  };
+  return <button onClick={clear}>clear</button>;
+};
+
 const HandleTodos = () => {
   const [text, setText] = React.useState<string>("");
   const [noop] = useMutation(Noop, {
@@ -165,6 +177,18 @@ const ShowTodos = () => {
       ))}
     </div>
   );
+};
+
+const ClearTodos = () => {
+  const clear = () => {
+    window.localStorage.clear();
+    client.writeQuery({
+      query: GetTodos,
+      data: { todos: [] },
+    });
+  };
+
+  return <button onClick={clear}>Clear</button>;
 };
 
 export default App;
