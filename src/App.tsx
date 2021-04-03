@@ -34,9 +34,8 @@ const Provider: React.FC = ({ children }) => {
 function App() {
   return (
     <Provider>
-      <div>ok</div>
-      <Items />
       <Handler />
+      <Items />
     </Provider>
   );
 }
@@ -54,8 +53,10 @@ const Noop = gql`
 `;
 
 const Handler = () => {
+  const [text, setText] = React.useState<string>("");
   const [noop] = useMutation(Noop, {
     update(cache) {
+      console.log("__text", text);
       const prevData = cache.readQuery({
         query: GetItems,
       });
@@ -63,7 +64,7 @@ const Handler = () => {
 
       const result = cache.writeQuery({
         query: GetItems,
-        data: { items: [...prev, "new"] },
+        data: { items: [...prev, text] },
       });
 
       console.log("UPDATE:", result);
@@ -71,11 +72,12 @@ const Handler = () => {
   });
 
   const handleAdd = async () => {
-    const result = await noop();
-    console.log("ok", result);
+    await noop();
   };
+
   return (
     <div>
+      <input onChange={(e) => setText(e.target.value)} value={text} />
       <button onClick={handleAdd}>+</button>
     </div>
   );
@@ -85,10 +87,9 @@ const Items = () => {
   const { data, loading, error } = useQuery(GetItems);
   if (loading) return <div>loading...</div>;
   if (error) return <div>error: {error.message}</div>;
-  if (!data) return <div>no data</div>;
-  const items = data?.items;
-  console.log("ITEMS, ", items);
-  if (!Array.isArray(items)) return <div>loading</div>;
+  if (!data || !data.items) return <div>no data</div>;
+
+  const items: Array<string> = data.items;
 
   return (
     <div>
