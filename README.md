@@ -12,7 +12,10 @@ Using `InMemoryCache` directly.
 
 Using `window.localstorage` to save state persistently.
 
-#### `ReactiveVariables`
+#### `/ReactiveVariables`
 
 Using `ReactiveVariables` feature on Apollo Client for storing local state.
 
+## LICENSE
+
+[MIT](https://github.com/snamiki1212/example-apollo-client-local-state/blob/main/LICENSE)
