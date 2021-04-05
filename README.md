@@ -1,6 +1,6 @@
 # example-apollo-client-local-state
 
-==>> https://snamiki1212.github.io/example-apollo-client-local-state/
+==> https://snamiki1212.github.io/example-apollo-client-local-state/
 
 ## Overview
 
