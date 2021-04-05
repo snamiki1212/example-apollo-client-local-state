@@ -13,13 +13,10 @@ export const HandleItems = () => {
       const prev = (prevData as any)?.items;
       const newData = [...prev, text];
 
-      const result = cache.writeQuery({
+      cache.writeQuery({
         query: GetItems,
         data: { items: newData },
       });
-
-      console.log("UPDATE:", result);
-      console.log("new Items", newData);
     },
   });
 
@@ -42,7 +39,6 @@ export const ShowItems = () => {
   if (!data || !data.items) return <div>no data</div>;
 
   const items: Array<string> = data.items;
-  console.log("ITEMS", items);
 
   return (
     <div>

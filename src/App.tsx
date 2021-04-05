@@ -1,4 +1,5 @@
 import React from "react";
+import { Provider } from "./apollo";
 import {
   ShowElements,
   ClearElements,
@@ -10,7 +11,7 @@ import {
   ClearItems,
   HandleItems,
 } from "./PureInMemoryCache/components";
-import { Provider } from "./apollo";
+import { ShowLines, ClearLines, HandleLines } from "./Cookie/components";
 
 function App() {
   return (
@@ -34,6 +35,13 @@ function App() {
         <HandleElements />
         <ShowElements />
         <ClearElements />
+      </div>
+
+      <div>
+        <h3>Cookie</h3>
+        <HandleLines />
+        <ShowLines />
+        <ClearLines />
       </div>
     </Provider>
   );

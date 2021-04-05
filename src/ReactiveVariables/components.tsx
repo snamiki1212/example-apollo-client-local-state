@@ -9,7 +9,6 @@ export const ShowElements = () => {
   if (!data || !data.elements) return <div>no data</div>;
 
   const elements: Array<string> = data.elements;
-  console.log("DATA, data", data);
 
   return (
     <div>
@@ -24,8 +23,7 @@ export const HandleElements = () => {
   const [text, setText] = React.useState<string>("");
   const [noop] = useMutation(Noop, {
     update() {
-      const result = elementsVar([...elementsVar(), text]);
-      console.log("UPDATE:", result);
+      elementsVar([...elementsVar(), text]);
     },
   });
 

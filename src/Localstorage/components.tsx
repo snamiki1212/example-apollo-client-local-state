@@ -14,14 +14,12 @@ export const HandleTodos = () => {
 
       const newData = [...prev, text];
 
-      const result = cache.writeQuery({
+      cache.writeQuery({
         query: GetTodos,
         data: { todos: newData },
       });
 
       window.localStorage.setItem("TODOS", JSON.stringify(newData));
-
-      console.log("UPDATE:", result);
     },
   });
 
