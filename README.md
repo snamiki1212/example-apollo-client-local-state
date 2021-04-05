@@ -4,17 +4,21 @@
 
 ## Overview
 
-#### `/PureInMemoryCache`
+#### `/PureInMemoryCache` (Volatility)
 
 Using `InMemoryCache` directly.
 
-#### `/Localstorage`
-
-Using `window.localstorage` to save state persistently.
-
-#### `/ReactiveVariables`
+#### `/ReactiveVariables` (Volatility)
 
 Using `ReactiveVariables` feature on Apollo Client for storing local state.
+
+#### `/Localstorage` (Persistently)
+
+Using `window.localstorage` to save state.
+
+#### `/Cookie` (Persistently)
+
+Using `Cookie` to save state.
 
 ## LICENSE
 
