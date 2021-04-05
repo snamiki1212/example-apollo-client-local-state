@@ -18,7 +18,7 @@ Using `window.localstorage` to save state.
 
 #### `/Cookie` (Persistently)
 
-Using `Cookie` to save state.
+Using `Cookie` to save state using `universal-cookie` package.
 
 ## LICENSE
 
